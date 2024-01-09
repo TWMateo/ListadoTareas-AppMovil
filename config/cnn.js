@@ -14,9 +14,5 @@ const config = {
 const pgp = pgPromise({})
 const db = pgp(config)
 
-console.log('Conexion ok')
-db.any('Select * from tareas')
-     .then(res => { console.table(res) })
-
 //Permite exportar la variable a otros archivos
 exports.db = db
