@@ -1,11 +1,14 @@
 //Importa el paquete
 const pgPromise = require('pg-promise')
 const config = {
-    host: 'localhost',
+    host: 'ep-noisy-hat-22730248.us-east-2.aws.neon.fl0.io',
     port: '5432',
-    database: 'Lista de tareas',
-    user: 'postgres',
-    password: '0505'
+    database: 'listado-tareas',
+    user: 'fl0user',
+    password: 'XsVlWT8I2uri',
+    ssl: {
+        rejectUnauthorized: false
+    }
 }
 //Instancia como objeto
 const pgp = pgPromise({})
