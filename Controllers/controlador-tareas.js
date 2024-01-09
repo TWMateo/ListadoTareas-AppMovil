@@ -14,13 +14,28 @@ const getTareas = async (req, res) => {
     }
 }
 
+const getTareasById = async (req, res)=>{
+    const {id} = req.query;
+    try {
+        const response = await db.any("SELECT * FROM tareas WHERE id=$1",[id]);
+        return res.json({
+            message:"Ok",
+            response:response
+        });
+    } catch (error) {
+        return res.json({
+            message:"Error"
+        })
+    }
+}
+
 const postTareas = async (req, res) => {
     try {
         const { descripcion, fecha_limite, completada } = req.body;
         const response = await db.any(`INSERT INTO tareas(descripcion, fecha_limite, completada) VALUES($1,$2,$3) RETURNING id;`, [descripcion, fecha_limite, completada])
         return res.json({
             response: `Ok - Tarea creada.`,
-            message: `Id de tarea: ${response[0].id}`
+            Id_tarea: `${response[0].id}`
         })
     } catch (error) {
         console.log(error)
@@ -33,14 +48,14 @@ const postTareas = async (req, res) => {
 const putTareas = async (req, res) => {
     try {
         let peticionSQL = "UPDATE tareas SET "
-        const { id = 0, descripcion = '', fecha_limite = null, completada = false } = req.body;
+        const { id = 0, descripcion = '', fecha_limite = null, completada =null } = req.body;
         if (descripcion != '') {
             peticionSQL += `descripcion ='${descripcion}', `
         }
         if (fecha_limite != null) {
             peticionSQL += `fecha_limite='${fecha_limite}', `
         }
-        if (completada) {
+        if (completada !=null ) {
             peticionSQL += `completada=${completada} `
         }
         if (id != 0) {
@@ -60,7 +75,7 @@ const putTareas = async (req, res) => {
 
 const deleteTareas = async (req, res) =>{
     try {
-        const { id } = req.body;
+        const { id } = req.query;
         const response = await db.none('DELETE FROM tareas WHERE id=$1',[id]);
         return res.json({
             message:`Ok - Tarea ${id} fue borrada.`
@@ -76,5 +91,6 @@ module.exports = {
     getTareas,
     postTareas,
     putTareas,
-    deleteTareas
+    deleteTareas,
+    getTareasById
 }
